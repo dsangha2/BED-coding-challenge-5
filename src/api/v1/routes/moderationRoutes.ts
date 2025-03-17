@@ -9,10 +9,152 @@ import {
 
 const router: Router = Router();
 
+/**
+ * @openapi
+ * /api/v1/moderation/post/{id}:
+ *   get:
+ *     summary: Retrieve a post by ID
+ *     tags: [Moderation]
+ *     description: >
+ *       Public endpoint to retrieve a post by its unique identifier.
+ *       API Version: v1.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique identifier for the post. Must be a non-empty alphanumeric string.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessPostResponse'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
 router.get("/post/:id", getPostById);
+
+/**
+ * @openapi
+ * /api/v1/moderation/post/{id}/moderate:
+ *   post:
+ *     summary: Moderate a post by ID (Internal Use Only)
+ *     tags: [Moderation]
+ *     description: >
+ *       Internal endpoint to apply moderation actions on a post.
+ *       API Version: v1.
+ *       (Internal Use Only)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique identifier for the post. Must be a valid non-empty alphanumeric string.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessModeratePost'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
 router.post("/post/:id/moderate", moderatePost);
+
+/**
+ * @openapi
+ * /api/v1/moderation/user/{id}/profile:
+ *   get:
+ *     summary: Retrieve a user profile by ID
+ *     tags: [Moderation]
+ *     description: >
+ *       Public endpoint to retrieve a user's profile.
+ *       API Version: v1.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique identifier for the user. Must be a non-empty alphanumeric string.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessUserProfile'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
 router.get("/user/:id/profile", getUserProfile);
+
+/**
+ * @openapi
+ * /api/v1/moderation/user/{id}/flag:
+ *   post:
+ *     summary: Flag a user by ID (Internal Use Only)
+ *     tags: [Moderation]
+ *     description: >
+ *       Internal endpoint to flag a user for moderation.
+ *       API Version: v1.
+ *       (Internal Use Only)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique identifier for the user. Must be a valid non-empty alphanumeric string.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *                 description: >
+ *                   Reason for flagging. Valid values include 'Spam', 'Harassment', 'Inappropriate'.
+ *                   Defaults to 'Spam' if not provided.
+ *           examples:
+ *             example1:
+ *               value:
+ *                 reason: "Harassment"
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessFlagUser'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         $ref: '#/components/responses/NotFound'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
 router.post("/user/:id/flag", flagUser);
+
+/**
+ * @openapi
+ * /api/v1/moderation/content/flags/stats:
+ *   get:
+ *     summary: Retrieve flagged content statistics (Internal Use Only)
+ *     tags: [Moderation]
+ *     description: >
+ *       Internal endpoint to retrieve statistics on flagged content.
+ *       API Version: v1.
+ *       (Internal Use Only)
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessFlagStats'
+ *       500:
+ *         $ref: '#/components/responses/InternalError'
+ */
 router.get("/content/flags/stats", getFlaggedContentStats);
 
 export default router;
